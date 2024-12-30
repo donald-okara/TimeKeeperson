@@ -68,8 +68,13 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.hilt.work)
 
-    //Room db dependancies
+
+    //WorkManager dependencies
+    implementation(libs.work.runtime.ktx)
+
+    //Room db dependencies
     implementation(libs.androidx.room.runtime)
     //noinspection KaptUsageInsteadOfKsp
     kapt(libs.androidx.room.compiler)

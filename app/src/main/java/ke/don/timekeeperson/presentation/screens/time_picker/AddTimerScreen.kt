@@ -30,7 +30,7 @@ import ke.don.timekeeperson.R
 @Composable
 fun AddTimerRoute(
     modifier: Modifier = Modifier,
-    viewModel: AddTimerViewModel = hiltViewModel<AddTimerViewModel>()
+    viewModel: AddTimerViewModel = hiltViewModel()
 ){
     val name by viewModel.name.collectAsState()
     val hours by viewModel.hours.collectAsState()

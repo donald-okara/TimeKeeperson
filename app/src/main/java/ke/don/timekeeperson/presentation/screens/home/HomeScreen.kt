@@ -13,7 +13,8 @@ import ke.don.timekeeperson.data.model.Timer
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
+    viewModel: HomeViewModel = hiltViewModel(),
+    onTimerClicked : (Int) -> Unit
 ){
     val allTimers by viewModel.allTimers.collectAsState()
 
