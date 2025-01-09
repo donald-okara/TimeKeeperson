@@ -34,7 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import ke.don.timekeeperson.presentation.utils.reformatTime
+import ke.don.timekeeperson.presentation.utils.reformatDuration
 
 @Composable
 fun TimerScreen(
@@ -46,7 +46,7 @@ fun TimerScreen(
 
     val timeRemainingFormatted by remember(timeRemaining) {
         derivedStateOf {
-            reformatTime(timeRemaining)
+            reformatDuration(timeRemaining)
         }
     }
 

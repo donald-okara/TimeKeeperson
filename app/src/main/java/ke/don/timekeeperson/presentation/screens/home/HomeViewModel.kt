@@ -2,34 +2,29 @@ package ke.don.timekeeperson.presentation.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ke.don.timekeeperson.data.model.Timer
-import ke.don.timekeeperson.data.repository.TimerRepository
-import kotlinx.coroutines.flow.MutableStateFlow
+import ke.don.timekeeperson.data.repository.HomeRepository
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val timerRepository: TimerRepository
-): ViewModel() {
-    private var _allTimers = MutableStateFlow(emptyList<Timer>())
-    val allTimers : StateFlow<List<Timer>> = _allTimers
+    private val homeRepository: HomeRepository
+) : ViewModel() {
 
-    init {
-        viewModelScope.launch {
-            getALlTimers()
-
+    val homeUiState: StateFlow<HomeUiState> = homeRepository.getAllTimers()
+        .map { timers ->
+            HomeUiState(
+                timerIsEmpty = timers.isEmpty(),
+                allTimers = timers.map { it.toTimerUiState(it) }
+            )
         }
-    }
-
-    suspend fun getALlTimers(){
-        timerRepository.getAllTimers().collect{ timers ->
-            _allTimers.update { timers }
-        }
-    }
-
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = HomeUiState()
+        )
 }

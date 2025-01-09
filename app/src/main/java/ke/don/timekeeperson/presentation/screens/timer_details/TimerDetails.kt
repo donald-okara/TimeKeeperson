@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -19,11 +21,23 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun TimerDetailsRoute(
-    timerId: String,
+    viewModel: TimeDetailsViewModel = hiltViewModel(),
 ){
+    val timer by viewModel.timer.collectAsState()
+
+    timer?.let {
+        TimerDetailsScreen(
+            timerName = it.name,
+            isTimerRunning = false,
+            timeLeft = it.totalDuration,
+            modifier = Modifier
+        )
+    }
+
 
 }
 
@@ -31,11 +45,13 @@ fun TimerDetailsRoute(
 fun TimerDetailsScreen(
     modifier: Modifier = Modifier,
     isTimerRunning: Boolean = false,
+    timeLeft: Int = 60,
     timerName: String,
 ){
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
     ) {
         Text(
             text = timerName,
@@ -44,11 +60,10 @@ fun TimerDetailsScreen(
         )
 
         TimerClock(
-            progress = 0.3f,
-            isTimerRunning = true
+            progress = 0f,
+            isTimerRunning = true,
+            timeLeft = timeLeft
         )
-
-
 
     }
 
@@ -57,10 +72,10 @@ fun TimerDetailsScreen(
 @Composable
 fun TimerClock(
     modifier: Modifier = Modifier,
-    progress: Float,
+    progress: Float = 0f,
     timeLeft: Int = 0,
     isTimerRunning: Boolean,
-    circleColor: Color = Color.Transparent,
+    circleColor: Color = MaterialTheme.colorScheme.surface,
     progressColor: Color = MaterialTheme.colorScheme.primary,
     strokeWidth: Float = 16f,
     fixedSize: Dp = 240.dp // Constant size for the timer

@@ -1,23 +1,23 @@
 package ke.don.timekeeperson.data.repository
 
-import ke.don.timekeeperson.data.dao.TimerDao
-import ke.don.timekeeperson.data.model.Timer
+import ke.don.datasource.dao.TimerDao
+import ke.don.datasource.model.Timer
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class TimerRepositoryImpl(
-    private val timerDao: TimerDao
+    private val timerDao: ke.don.datasource.dao.TimerDao
 ): TimerRepository {
-    override suspend fun addTimer(timer: Timer) = timerDao.addTimer(timer)
+    override suspend fun addTimer(timer: ke.don.datasource.model.Timer) = timerDao.addTimer(timer)
 
-    override suspend fun getAllTimers(): Flow<List<Timer>> = timerDao.getAllTimers()
+    override fun getAllTimers(): Flow<List<ke.don.datasource.model.Timer>> = timerDao.getAllTimers()
 
-    override suspend fun getAllTimerNames(): Flow<List<String>> = timerDao.getAllTimerNames()
+    override fun getAllTimerNames(): Flow<List<String>> = timerDao.getAllTimerNames()
 
-    override suspend fun getTimerById(id: Int): Flow<Timer?> = timerDao.getTimerById(id)
+    override fun getTimerById(id: Int): Flow<ke.don.datasource.model.Timer?> = timerDao.getTimerById(id)
 
-    override suspend fun updateTimerName(id: Int, name: String) = timerDao.updateTimerName(id = id, name = name)
+    override fun updateTimerName(id: Int, name: String) = timerDao.updateTimerName(id = id, name = name)
 
-    override suspend fun deleteTimer(timer: Timer) = timerDao.deleteTimer(timer)
+    override fun deleteTimer(timer: ke.don.datasource.model.Timer) = timerDao.deleteTimer(timer)
 
 }

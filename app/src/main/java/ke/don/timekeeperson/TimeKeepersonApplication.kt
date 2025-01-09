@@ -1,4 +1,4 @@
-package ke.don.timekeeperson.domain
+package ke.don.timekeeperson
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

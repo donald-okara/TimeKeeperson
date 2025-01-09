@@ -1,4 +1,4 @@
-package ke.don.timekeeperson.domain
+package ke.don.datasource.domain
 
 import androidx.room.TypeConverter
 import java.util.Date

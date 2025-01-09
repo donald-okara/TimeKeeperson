@@ -1,29 +1,29 @@
 package ke.don.timekeeperson.data.repository
 
-import ke.don.timekeeperson.data.model.Timer
+import ke.don.datasource.model.Timer
 import kotlinx.coroutines.flow.Flow
 
 interface TimerRepository {
     /**
      * CREATE
      */
-    suspend fun addTimer(timer: Timer)
+    suspend fun addTimer(timer: ke.don.datasource.model.Timer)
     /**
      * READ
      */
-    suspend fun getAllTimers(): Flow<List<Timer>>
+    fun getAllTimers(): Flow<List<ke.don.datasource.model.Timer>>
 
-    suspend fun getAllTimerNames():Flow<List<String>>
+    fun getAllTimerNames():Flow<List<String>>
 
-    suspend fun getTimerById(id: Int): Flow<Timer?>
+    fun getTimerById(id: Int): Flow<ke.don.datasource.model.Timer?>
 
     /**
      * UPDATE
      */
-    suspend fun updateTimerName(id: Int, name: String)
+    fun updateTimerName(id: Int, name: String)
 
     /**
      * DELETE
      */
-    suspend fun deleteTimer(timer: Timer)
+    fun deleteTimer(timer: ke.don.datasource.model.Timer)
 }

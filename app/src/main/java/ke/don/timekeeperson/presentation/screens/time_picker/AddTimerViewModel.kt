@@ -1,10 +1,12 @@
 package ke.don.timekeeperson.presentation.screens.time_picker
 
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ke.don.timekeeperson.data.model.Timer
-import ke.don.timekeeperson.data.model.TimerType
+import ke.don.datasource.model.Timer
+import ke.don.datasource.model.TimerType
 import ke.don.timekeeperson.data.repository.TimerRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -78,16 +80,24 @@ class AddTimerViewModel @Inject constructor(
         )
     )
 
-    private val nameIsTaken =  timerNames.value.contains(timer.value.name)
+    val timerIsValid: StateFlow<Boolean> = combine(
+        totalDuration,
+        name
+    ) { totalDurationValue, nameValue ->
+        totalDurationValue > 0 && !timerNames.value.contains(nameValue)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = false
+    )
 
-    val timerIsValid = timer.value.totalDuration > 0 && !nameIsTaken
 
-    fun clearState(){
+    private fun clearState(){
         _name.update { "" }
         _hours.update { 0 }
         _minutes.update { 0 }
         _seconds.update { 0 }
-        _timerType.update { TimerType.Classic }
+        _timerType.update {TimerType.Classic }
         _nameError.update { null }
     }
 
@@ -132,7 +142,7 @@ class AddTimerViewModel @Inject constructor(
     }
 
     fun addTimer(){
-        if(timerIsValid){
+        if(timerIsValid.value){
             viewModelScope.launch {
                 timerRepository.addTimer(timer.value)
                 clearState()

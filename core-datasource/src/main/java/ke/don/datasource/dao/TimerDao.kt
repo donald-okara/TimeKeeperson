@@ -1,11 +1,11 @@
-package ke.don.timekeeperson.data.dao
+package ke.don.datasource.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import ke.don.timekeeperson.data.model.Timer
+import ke.don.datasource.model.Timer
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -33,11 +33,11 @@ interface TimerDao {
      * UPDATE
      */
     @Query("UPDATE timer SET name = :name WHERE id = :id")
-    suspend fun updateTimerName(id: Int, name: String)
+    fun updateTimerName(id: Int, name: String)
 
     /**
      * DELETE
      */
     @Delete
-    suspend fun deleteTimer(timer: Timer)
+    fun deleteTimer(timer: Timer)
 }

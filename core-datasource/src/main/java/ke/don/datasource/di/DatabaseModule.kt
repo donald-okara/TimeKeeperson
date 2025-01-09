@@ -1,6 +1,5 @@
-package ke.don.timekeeperson.domain
+package ke.don.datasource.di
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import dagger.Module
@@ -8,10 +7,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import ke.don.timekeeperson.data.dao.TimerDao
-import ke.don.timekeeperson.data.database.TimerKeepersonDatabase
-import ke.don.timekeeperson.data.repository.TimerRepository
-import ke.don.timekeeperson.data.repository.TimerRepositoryImpl
+import ke.don.datasource.dao.TimerDao
+import ke.don.datasource.database.TimerKeepersonDatabase
 import javax.inject.Singleton
 
 @Module

@@ -26,11 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ke.don.timekeeperson.R
 
-
 @Composable
 fun AddTimerRoute(
     modifier: Modifier = Modifier,
-    viewModel: AddTimerViewModel = hiltViewModel()
+    viewModel: AddTimerViewModel = hiltViewModel(),
+    onNavigateBack: () -> Unit
 ){
     val name by viewModel.name.collectAsState()
     val hours by viewModel.hours.collectAsState()
@@ -39,12 +39,12 @@ fun AddTimerRoute(
     val totalDuration by viewModel.totalDuration.collectAsState()
     val timer by viewModel.timer.collectAsState()
     val nameError by viewModel.nameError.collectAsState()
-    val timerIsValid = viewModel.timerIsValid
+    val timerIsValid = viewModel.timerIsValid.collectAsState()
 
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ){
         TimePickerScreen(
@@ -52,14 +52,17 @@ fun AddTimerRoute(
             hours = hours,
             minutes = minutes,
             seconds = seconds,
-            enabled = timerIsValid,
+            enabled = timerIsValid.value,
             totalDuration = totalDuration,
             nameError = nameError,
             onNameValueChange = {viewModel.onNameValueChange(it)},
             onHourValueChange = {viewModel.onHourValueChange(it)},
             onMinuteValueChange = {viewModel.onMinuteValueChange(it)},
             onSecondValueChange = {viewModel.onSecondValueChange(it)},
-            onAddTimerClicked = {viewModel.addTimer()}
+            onAddTimerClicked = {
+                onNavigateBack()
+                viewModel.addTimer()
+            }
         )
     }
 
@@ -135,49 +138,19 @@ fun TimePickerRow(
     onHourValueChange: (Int) -> Unit,
     onMinuteValueChange: (Int) -> Unit,
     onSecondValueChange: (Int) -> Unit
-){
+) {
     val textFieldWidth = 128.dp
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier.fillMaxWidth()
-    ){
-        OutlinedTextField(
-            value = hours.toString(),
-            onValueChange = { input ->
-                // Ensure the input is a valid number and within the range 0-24
-                val numericInput = input.toIntOrNull()
-                if (numericInput != null && numericInput in 0..24) {
-                    onHourValueChange(numericInput)
-                }
-            },
-            label = { Text("Hours") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number
-            ),
-            modifier = modifier.width(textFieldWidth)
-
-        )
-
-        Text(
-            text = ":",
-            modifier = modifier.padding(horizontal = 8.dp)
-        )
-        OutlinedTextField(
-            value = minutes.toString(),
-            onValueChange = { input ->
-                // Ensure the input is a valid number and within the range 0-24
-                val numericInput = input.toIntOrNull()
-                if (numericInput != null && numericInput in 0..59) {
-                    onMinuteValueChange(numericInput)
-                }
-            },
-            label = { Text("Minutes") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number
-            ),
+    ) {
+        TimePickerField(
+            value = hours,
+            range = 0..24,
+            label = "Hours",
+            onValueChange = onHourValueChange,
             modifier = modifier.width(textFieldWidth)
         )
 
@@ -185,25 +158,59 @@ fun TimePickerRow(
             text = ":",
             modifier = modifier.padding(horizontal = 8.dp)
         )
-        OutlinedTextField(
-            value = seconds.toString(),
-            onValueChange = { input ->
-                // Ensure the input is a valid number and within the range 0-24
-                val numericInput = input.toIntOrNull()
-                if (numericInput != null && numericInput in 0..59) {
-                    onSecondValueChange(numericInput)
-                }
-            },
-            label = { Text("Seconds") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number
-            ),
-            modifier = modifier.width(textFieldWidth)
 
+        TimePickerField(
+            value = minutes,
+            range = 0..59,
+            label = "Minutes",
+            onValueChange = onMinuteValueChange,
+            modifier = modifier.width(textFieldWidth)
+        )
+
+        Text(
+            text = ":",
+            modifier = modifier.padding(horizontal = 8.dp)
+        )
+
+        TimePickerField(
+            value = seconds,
+            range = 0..59,
+            label = "Seconds",
+            onValueChange = onSecondValueChange,
+            modifier = modifier.width(textFieldWidth)
         )
     }
 }
+
+@Composable
+fun TimePickerField(
+    value: Int,
+    range: IntRange,
+    label: String,
+    onValueChange: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedTextField(
+        value = if (value == 0) "" else value.toString(), // Show empty string if value is 0
+        onValueChange = { input ->
+            // Ensure the input is a valid number and within the range
+            val numericInput = input.toIntOrNull()
+            if (numericInput != null && numericInput in range) {
+                onValueChange(numericInput)
+            } else if (input.isEmpty()) {
+                onValueChange(0) // Handle clearing the field to reset to 0
+            }
+        },
+        label = { Text(label) },
+        placeholder = { Text("0") }, // Display 0 as a placeholder
+        singleLine = true,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Number
+        ),
+        modifier = modifier
+    )
+}
+
 
 @Preview
 @Composable

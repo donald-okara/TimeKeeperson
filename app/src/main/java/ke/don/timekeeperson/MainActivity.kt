@@ -28,12 +28,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             TimeKeepersonTheme {
                 val navController = rememberNavController()
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()
+                ) { innerPadding ->
                     Navigation(
-                        modifier = Modifier.padding(innerPadding),
-                        navController = navController
+                        navController = navController,
+                        modifier = Modifier.padding(innerPadding)
                     )
                 }
+
             }
         }
     }

@@ -1,8 +1,10 @@
 package ke.don.timekeeperson.presentation.utils
 
+import java.util.Date
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
-fun reformatTime(time: Int): String {
+fun reformatDuration(time: Int): String {
     val hours = time / 3600
     val minutes = (time % 3600) / 60
     val seconds = time % 60
@@ -17,3 +19,30 @@ fun reformatTime(time: Int): String {
         return String.format(Locale.getDefault(), "%02d", seconds)
     }
 }
+
+
+fun reformatDateTime(date: Date): String {
+    val currentTime = System.currentTimeMillis()
+    val differenceInMillis = currentTime - date.time
+
+    return when {
+        differenceInMillis < TimeUnit.MINUTES.toMillis(1) -> "Just now"
+        differenceInMillis < TimeUnit.HOURS.toMillis(1) -> {
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(differenceInMillis)
+            "$minutes minute${if (minutes > 1) "s" else ""} ago"
+        }
+        differenceInMillis < TimeUnit.DAYS.toMillis(1) -> {
+            val hours = TimeUnit.MILLISECONDS.toHours(differenceInMillis)
+            "$hours hour${if (hours > 1) "s" else ""} ago"
+        }
+        differenceInMillis < TimeUnit.DAYS.toMillis(30) -> {
+            val days = TimeUnit.MILLISECONDS.toDays(differenceInMillis)
+            "$days day${if (days > 1) "s" else ""} ago"
+        }
+        else -> {
+            val months = differenceInMillis / TimeUnit.DAYS.toMillis(30)
+            "$months month${if (months > 1) "s" else ""} ago"
+        }
+    }
+}
+
