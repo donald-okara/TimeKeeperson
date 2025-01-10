@@ -13,5 +13,14 @@ moduleGraphConfig {
     readmePath.set("./README.md") // Where the graph will be appended
     heading = "### Module Graph"  // Heading in the README
     showFullPath.set(false)       // Optional: Show full module paths
-    theme.set(Theme.NEUTRAL)      // Optional: Set graph theme
+    theme.set(
+        Theme.BASE(
+            themeVariables = mapOf(
+                "primaryTextColor" to "#FFFFFF",
+                "primaryColor" to "#5A4F7C",
+                "lineColor" to "#F5A623"
+            ),
+            focusColor = "#FA8140"
+        )
+    )
 }

@@ -3,7 +3,8 @@
 ```mermaid
 %%{
   init: {
-    'theme': 'neutral'
+    'theme': 'base',
+    'themeVariables': {"primaryTextColor":"#FFFFFF","primaryColor":"#5A4F7C","lineColor":"#F5A623"}
   }
 }%%
 
