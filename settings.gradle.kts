@@ -22,3 +22,7 @@ dependencyResolutionManagement {
 rootProject.name = "Time Keeperson"
 include(":app")
 include(":core-datasource")
+include(":feature-timer")
+include(":app-home")
+include(":app-navigation")
+include(":core-domain")

@@ -11,12 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import ke.don.timekeeperson.presentation.navigation.Navigation
-import ke.don.timekeeperson.presentation.screens.time_picker.AddTimerRoute
-import ke.don.timekeeperson.presentation.screens.timer.TimerScreen
+import ke.don.app_navigation.navigation.Navigation
 import ke.don.timekeeperson.ui.theme.TimeKeepersonTheme
 
 @AndroidEntryPoint

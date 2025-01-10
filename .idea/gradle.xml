@@ -11,7 +11,11 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/app-home" />
+            <option value="$PROJECT_DIR$/app-navigation" />
             <option value="$PROJECT_DIR$/core-datasource" />
+            <option value="$PROJECT_DIR$/core-domain" />
+            <option value="$PROJECT_DIR$/feature-timer" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
