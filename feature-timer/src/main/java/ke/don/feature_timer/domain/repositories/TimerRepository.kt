@@ -1,5 +1,6 @@
 package ke.don.feature_timer.domain.repositories
 
+import ke.don.datasource.model.Timer
 import kotlinx.coroutines.flow.Flow
 
 interface TimerRepository {
@@ -14,7 +15,7 @@ interface TimerRepository {
 
     fun getAllTimerNames():Flow<List<String>>
 
-    fun getTimerById(id: Int): Flow<ke.don.datasource.model.Timer?>
+    suspend fun getTimerById(id: Int): Timer?
 
     /**
      * UPDATE

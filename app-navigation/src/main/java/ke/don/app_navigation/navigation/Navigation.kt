@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import ke.don.app_home.presentation.home.HomeScreen
 import ke.don.core_domain.screens.Screens
 import ke.don.feature_timer.presentation.screens.time_picker.AddTimerRoute
-import ke.don.feature_timer.presentation.screens.timer_details.TimerDetailsRoute
+import ke.don.feature_timer.presentation.screens.timer_session.TimerDetailsRoute
 
 @Composable
 fun Navigation(
@@ -43,7 +43,9 @@ fun Navigation(
         }
 
         composable(Screens.TimerDetails.route){
-            TimerDetailsRoute()
+            TimerDetailsRoute(
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
     }
 

@@ -27,7 +27,7 @@ interface TimerDao {
     fun getAllTimerNames(): Flow<List<String>>
 
     @Query("SELECT * FROM timer WHERE id = :id")
-    fun getTimerById(id: Int): Flow<Timer?>
+    suspend fun getTimerById(id: Int): Timer?
 
     /**
      * UPDATE

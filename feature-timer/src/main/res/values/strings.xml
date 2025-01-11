@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="add_timer">Add timer</string>
+    <string name="back_button">Back button</string>
+    <string name="start_timer">Start</string>
+    <string name="cancel_timer">Cancel</string>
+    <string name="pause_timer">Pause</string>
+    <string name="stop_timer">Stop</string>
+    <string name="resume_timer">Resume</string>
+    <string name="save_session">Save</string>
 </resources>

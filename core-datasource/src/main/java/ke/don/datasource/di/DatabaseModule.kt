@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import ke.don.datasource.dao.SessionDao
 import ke.don.datasource.dao.TimerDao
 import ke.don.datasource.database.TimerKeepersonDatabase
 import javax.inject.Singleton
@@ -21,12 +22,16 @@ object DatabaseModule {
             context,
             TimerKeepersonDatabase::class.java,
             "timekeeperson_database"
-        ).build()
+        )
+            //.addMigrations(MIGRATION_1_3)  // Add the migration here
+            .build()
     }
 
     @Provides
-    fun provideTimerDao(database: TimerKeepersonDatabase): TimerDao {
-        return database.timerDao()
-    }
+    fun provideTimerDao(database: TimerKeepersonDatabase): TimerDao = database.timerDao()
+
+
+    @Provides
+    fun provideSessionDao(database: TimerKeepersonDatabase): SessionDao = database.sessionDao()
 
 }

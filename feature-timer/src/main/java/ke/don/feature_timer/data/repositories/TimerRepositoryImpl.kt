@@ -1,5 +1,6 @@
 package ke.don.feature_timer.data.repositories
 
+import ke.don.datasource.model.Timer
 import ke.don.feature_timer.domain.repositories.TimerRepository
 import kotlinx.coroutines.flow.Flow
 
@@ -12,7 +13,7 @@ class TimerRepositoryImpl(
 
     override fun getAllTimerNames(): Flow<List<String>> = timerDao.getAllTimerNames()
 
-    override fun getTimerById(id: Int): Flow<ke.don.datasource.model.Timer?> = timerDao.getTimerById(id)
+    override suspend fun getTimerById(id: Int): Timer? = timerDao.getTimerById(id)
 
     override fun updateTimerName(id: Int, name: String) = timerDao.updateTimerName(id = id, name = name)
 
