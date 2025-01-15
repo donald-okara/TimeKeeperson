@@ -7,8 +7,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import ke.don.datasource.dao.SessionDao
-import ke.don.datasource.dao.TimerDao
+import ke.don.datasource.database.dao.SessionDao
+import ke.don.datasource.database.dao.TimerDao
 import ke.don.datasource.database.TimerKeepersonDatabase
 import javax.inject.Singleton
 

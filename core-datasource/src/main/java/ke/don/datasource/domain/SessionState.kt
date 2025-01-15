@@ -1,8 +1,15 @@
-package ke.don.feature_timer.domain.model
+package ke.don.datasource.domain
 
-import ke.don.datasource.model.Session
-import ke.don.datasource.model.SessionStatus
+import ke.don.datasource.domain.model.Session
+import ke.don.datasource.domain.model.SessionStatus
+import kotlinx.serialization.Serializable
 
+@Serializable
+data class AllTimerSessionStates(
+    val sessionStates: List<SessionState> = emptyList()
+)
+
+@Serializable
 data class SessionState(
     val sessionId: Int= 0,
     val timerId: Int = 0,

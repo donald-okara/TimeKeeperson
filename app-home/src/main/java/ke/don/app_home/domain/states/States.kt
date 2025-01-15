@@ -1,8 +1,8 @@
 package ke.don.app_home.domain.states
 
-import ke.don.datasource.model.Timer
-import ke.don.datasource.utils.reformatDateTime
-import ke.don.datasource.utils.reformatDuration
+import ke.don.datasource.domain.model.Timer
+import ke.don.datasource.domain.utils.reformatDateTime
+import ke.don.datasource.domain.utils.reformatDuration
 
 
 data class HomeUiState(

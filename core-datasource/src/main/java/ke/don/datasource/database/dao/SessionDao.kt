@@ -1,9 +1,9 @@
-package ke.don.datasource.dao
+package ke.don.datasource.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import ke.don.datasource.model.Session
+import ke.don.datasource.domain.model.Session
 
 @Dao
 interface SessionDao {

@@ -5,11 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import ke.don.datasource.dao.SessionDao
-import ke.don.datasource.dao.TimerDao
+import ke.don.datasource.database.dao.SessionDao
+import ke.don.datasource.database.dao.TimerDao
 import ke.don.datasource.domain.Converters
-import ke.don.datasource.model.Session
-import ke.don.datasource.model.Timer
+import ke.don.datasource.domain.model.Session
+import ke.don.datasource.domain.model.Timer
 
 @Database(
     entities = [

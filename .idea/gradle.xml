@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/core-datasource" />
             <option value="$PROJECT_DIR$/core-domain" />
             <option value="$PROJECT_DIR$/feature-timer" />
+            <option value="$PROJECT_DIR$/shared-chai" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

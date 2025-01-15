@@ -4,7 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.CountDownTimer
 import android.os.IBinder
-import ke.don.datasource.model.SessionStatus
+import ke.don.datasource.domain.model.SessionStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -43,7 +43,9 @@ class TimerService : Service() {
             ACTION_PAUSE -> {
                 status = SessionStatus.PAUSED
                 println("TimerService: Pausing timer, time remaining: $remainingTime")
-                pauseTimer()
+                CoroutineScope(Dispatchers.IO).launch{
+                    pauseTimer()
+                }
             }
             ACTION_RESUME -> {
                 status = SessionStatus.RUNNING
@@ -88,7 +90,7 @@ class TimerService : Service() {
     }
 
 
-    fun pauseTimer() {
+    suspend fun pauseTimer() {
         status = SessionStatus.PAUSED
         timerJob?.cancel() // Cancel the timer
         isPaused = true
@@ -103,7 +105,9 @@ class TimerService : Service() {
             status = SessionStatus.RUNNING
             startTimer(remainingTime) // Resume from the remaining time
             isPaused = false
-            timerCallback?.onTimerTick(remainingTime, totalDuration, status)
+            CoroutineScope(Dispatchers.IO).launch{
+                timerCallback?.onTimerTick(remainingTime, totalDuration, status)
+            }
 
             println("TimerService: Timer resumed with remainingTime = $remainingTime")
         }
@@ -113,7 +117,9 @@ class TimerService : Service() {
         status = SessionStatus.COMPLETED
         timerJob?.cancel()
         timer = null
-        timerCallback?.onTimerTick(remainingTime, totalDuration, status)
+        CoroutineScope(Dispatchers.IO).launch{
+            timerCallback?.onTimerTick(remainingTime, totalDuration, status)
+        }
         println("TimerService: Timer stopped")
     }
 

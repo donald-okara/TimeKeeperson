@@ -1,11 +1,11 @@
-package ke.don.datasource.dao
+package ke.don.datasource.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import ke.don.datasource.model.Timer
+import ke.don.datasource.domain.model.Timer
 import kotlinx.coroutines.flow.Flow
 
 @Dao

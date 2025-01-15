@@ -1,10 +1,16 @@
 package ke.don.feature_timer.presentation.screens.timer_session
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,12 +40,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import ke.don.datasource.model.SessionStatus
-import ke.don.datasource.utils.reformatDuration
+import ke.don.datasource.domain.model.SessionStatus
+import ke.don.datasource.domain.utils.reformatDuration
 import ke.don.feature_timer.R
 
 
@@ -47,12 +53,15 @@ import ke.don.feature_timer.R
 fun TimerDetailsRoute(
     modifier: Modifier = Modifier,
     onNavigateBack : () -> Unit,
+    runningColor: Color,
+    pausedColor: Color,
+    completedColor: Color,
     viewModel: TimerSessionViewModel = hiltViewModel(),
 ){
     val sessionState by viewModel.sessionState.collectAsState()
     val progress = remember {
         derivedStateOf {
-            sessionState.timeLeft.toFloat() / sessionState.expectedRunTime.toFloat()
+            1f-(sessionState.timeLeft.toFloat() / sessionState.expectedRunTime.toFloat())
         }
     }
 
@@ -100,9 +109,11 @@ fun TimerDetailsRoute(
                 onCancel = viewModel::cancel,
                 onStopTimer = viewModel::stopSession,
                 onSaveSession = viewModel::saveSession,
+                runningColor = runningColor,
+                pausedColor = pausedColor,
+                completedColor = completedColor,
                 modifier = modifier
                     .padding(8.dp)
-                    .fillMaxSize()
                     .align(Alignment.Center)
             )
         }
@@ -124,10 +135,15 @@ fun TimerDetailsScreen(
     onStartTimer: () -> Unit,
     onCancel: () -> Unit,
     onStopTimer: () -> Unit,
-    onSaveSession: () -> Unit
+    onSaveSession: () -> Unit,
+    runningColor: Color,
+    pausedColor: Color,
+    completedColor: Color,
 ){
+    val spacerWeight = 1f
+
     Column(
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
@@ -137,11 +153,20 @@ fun TimerDetailsScreen(
             color = MaterialTheme.colorScheme.onBackground
         )
 
+        Spacer(modifier = modifier.weight(spacerWeight))
+
         TimerClock(
             progress = progress,
-            status = status,
+            progressColor = when(status){
+                SessionStatus.RUNNING-> runningColor
+                SessionStatus.PAUSED-> pausedColor
+                SessionStatus.COMPLETED-> completedColor
+                else -> Color.Transparent
+            },
             timeLeft = timeLeft
         )
+
+        Spacer(modifier = modifier.weight(spacerWeight))
 
         TimerActionsComponent(
             status = status,
@@ -150,7 +175,10 @@ fun TimerDetailsScreen(
             onStartTimer = onStartTimer,
             onCancel = onCancel,
             onStopTimer = onStopTimer,
-            onSaveSession = onSaveSession
+            onSaveSession = onSaveSession,
+            runningColor = runningColor,
+            pausedColor = pausedColor,
+            completedColor = completedColor
         )
     }
 
@@ -161,7 +189,6 @@ fun TimerClock(
     modifier: Modifier = Modifier,
     progress: Float = 0f,
     timeLeft: Long = 0L,
-    status: SessionStatus = SessionStatus.IDLE,
     circleColor: Color = MaterialTheme.colorScheme.surface,
     progressColor: Color = MaterialTheme.colorScheme.primary,
     strokeWidth: Float = 16f,
@@ -187,10 +214,7 @@ fun TimerClock(
 
             // Draw the progress arc
             drawArc(
-                color = when (status) {
-                    SessionStatus.RUNNING -> progressColor
-                    else -> circleColor
-                },
+                color = progressColor,
                 startAngle = -90f,
                 sweepAngle = 360f * progress,
                 useCenter = false,
@@ -223,35 +247,58 @@ fun TimerActionsComponent(
     onCancel: () -> Unit,
     onStopTimer: () -> Unit,
     onSaveSession: () -> Unit,
-    status: SessionStatus
+    status: SessionStatus,
+    runningColor: Color,
+    pausedColor: Color,
+    completedColor: Color,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier.padding(8.dp)
-    ) {
-        when (status) {
-            SessionStatus.RUNNING -> {
-                ActionButton(text = stringResource(R.string.cancel_timer), onClick = onCancel)
-                ActionButton(text = stringResource(R.string.stop_timer), onClick = onStopTimer)
-                ActionButton(text = stringResource(R.string.pause_timer), onClick = onPauseTimer, isPrimary = true)
-            }
-            SessionStatus.PAUSED -> {
-                ActionButton(text = stringResource(R.string.cancel_timer), onClick = onCancel)
-                ActionButton(text = stringResource(R.string.stop_timer), onClick = onStopTimer)
-                ActionButton(text = stringResource(R.string.resume_timer), onClick = onResumeTimer, isPrimary = true)
-            }
-            SessionStatus.COMPLETED -> {
-                ActionButton(text = stringResource(R.string.cancel_timer), onClick = onCancel)
-                ActionButton(text = stringResource(R.string.save_session), onClick = onSaveSession, isPrimary = true)
-            }
-            SessionStatus.IDLE -> {
-                ActionButton(
-                    text = stringResource(R.string.start_timer),
-                    onClick = onStartTimer,
-                    isPrimary = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
+    AnimatedContent(targetState = status, transitionSpec = {
+        fadeIn(animationSpec = tween(300)) togetherWith fadeOut(animationSpec = tween(300))
+    }) { targetStatus ->
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = modifier.padding(8.dp)
+        ) {
+            when (targetStatus) {
+                SessionStatus.RUNNING -> {
+                    ActionButton(text = stringResource(R.string.stop_timer), onClick = onStopTimer)
+                    ActionButton(
+                        text = stringResource(R.string.pause_timer),
+                        onClick = onPauseTimer,
+                        isPrimary = true,
+                        containerColor = runningColor
+                    )
+                }
+
+                SessionStatus.PAUSED -> {
+                    ActionButton(text = stringResource(R.string.stop_timer), onClick = onStopTimer)
+                    ActionButton(
+                        text = stringResource(R.string.resume_timer),
+                        onClick = onResumeTimer,
+                        isPrimary = true,
+                        containerColor = pausedColor
+                    )
+                }
+
+                SessionStatus.COMPLETED -> {
+                    ActionButton(text = stringResource(R.string.cancel_timer), onClick = onCancel)
+                    ActionButton(
+                        text = stringResource(R.string.save_session),
+                        onClick = onSaveSession,
+                        isPrimary = true,
+                        containerColor = completedColor
+                    )
+                }
+
+                SessionStatus.IDLE -> {
+                    ActionButton(
+                        text = stringResource(R.string.start_timer),
+                        onClick = onStartTimer,
+                        isPrimary = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }
@@ -262,6 +309,7 @@ fun ActionButton(
     text: String,
     onClick: () -> Unit,
     isPrimary: Boolean = false,
+    containerColor: Color = MaterialTheme.colorScheme.primary,
     modifier: Modifier = Modifier,
     buttonHeight: Dp = 48.dp,
     buttonWidth: Dp = 120.dp
@@ -269,6 +317,9 @@ fun ActionButton(
     if (isPrimary) {
         Button(
             onClick = onClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = containerColor // Background color of the button
+            ),
             modifier = modifier
                 .padding(8.dp)
                 .size(width = buttonWidth, height = buttonHeight)
@@ -285,17 +336,6 @@ fun ActionButton(
             Text(text = text)
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun TimerClockPreview() {
-    TimerClock(
-        progress = 0.75f,
-        timeLeft = 45,
-        status = SessionStatus.RUNNING,
-        strokeWidth = 12f
-    )
 }
 
 

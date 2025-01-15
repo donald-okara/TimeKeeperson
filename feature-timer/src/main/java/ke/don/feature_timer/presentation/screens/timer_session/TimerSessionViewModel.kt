@@ -8,9 +8,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ke.don.core_domain.logger.LoggerImpl
 import ke.don.core_domain.screens.Screens
-import ke.don.datasource.model.Timer
+import ke.don.datasource.domain.model.Timer
 import ke.don.feature_timer.domain.repositories.SessionRepository
 import ke.don.feature_timer.domain.repositories.TimerRepository
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -26,11 +27,12 @@ class TimerSessionViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
-   private var timerId = savedStateHandle.get<String>(Screens.TimerDetails.timerIdNavigationArgument)?.toInt()
+    private var timerId = savedStateHandle.get<String>(Screens.TimerDetails.timerIdNavigationArgument)?.toInt()
 
     // Flow to emit timer data
     private var _timer = MutableStateFlow<Timer?>(null)
     val timer: StateFlow<Timer?> = _timer
+
 
     val sessionState = sessionRepository.sessionState
 
@@ -42,8 +44,10 @@ class TimerSessionViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            timer.collect { fetchedTimer ->
-                fetchedTimer?.let { sessionRepository.createSession(it) }
+            _timer.collect { fetchedTimer ->
+                if (sessionState.value.timerId != fetchedTimer?.id) {
+                    fetchedTimer?.let { sessionRepository.createSession(it) }
+                }
             }
         }
 
@@ -53,13 +57,25 @@ class TimerSessionViewModel @Inject constructor(
     }
 
 
-    fun startSession() = sessionRepository.startSession()
-    fun pauseSession() = sessionRepository.pauseSession()
-    fun resumeSession() = sessionRepository.resumeSession()
-    fun stopSession() = sessionRepository.stopSession()
+    fun startSession() = viewModelScope.launch {
+        sessionRepository.startSession()
+    }
+    fun pauseSession() = viewModelScope.launch {
+        sessionRepository.pauseSession()
+    }
+    fun resumeSession() = viewModelScope.launch{
+        sessionRepository.resumeSession()
+    }
+    fun stopSession() = viewModelScope.launch{
+        sessionRepository.stopSession()
+    }
     fun saveSession() = viewModelScope.launch {
         sessionRepository.saveSession()
     }
-    fun cancel() = sessionRepository.cancel()
+    fun cancel() = viewModelScope.launch{
+        sessionRepository.cancel()
+    }
+
+
 
 }

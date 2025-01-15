@@ -3,8 +3,8 @@ package ke.don.feature_timer.presentation.screens.time_picker
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ke.don.datasource.model.Timer
-import ke.don.datasource.model.TimerType
+import ke.don.datasource.domain.model.Timer
+import ke.don.datasource.domain.model.TimerType
 import ke.don.feature_timer.domain.repositories.TimerRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -95,7 +95,7 @@ class AddTimerViewModel @Inject constructor(
         _hours.update { 0 }
         _minutes.update { 0 }
         _seconds.update { 0 }
-        _timerType.update {TimerType.Classic }
+        _timerType.update { TimerType.Classic }
         _nameError.update { null }
     }
 

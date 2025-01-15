@@ -1,5 +1,6 @@
 package ke.don.app_navigation.navigation
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -44,7 +45,10 @@ fun Navigation(
 
         composable(Screens.TimerDetails.route){
             TimerDetailsRoute(
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                runningColor = MaterialTheme.colorScheme.tertiaryContainer,
+                pausedColor = MaterialTheme.colorScheme.primary,
+                completedColor = MaterialTheme.colorScheme.errorContainer
             )
         }
     }

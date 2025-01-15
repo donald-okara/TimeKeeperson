@@ -1,4 +1,4 @@
-package ke.don.datasource.model
+package ke.don.datasource.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
