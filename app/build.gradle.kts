@@ -26,7 +26,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(project(":app-navigation"))
+    implementation(project(":feature-timer"))
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)

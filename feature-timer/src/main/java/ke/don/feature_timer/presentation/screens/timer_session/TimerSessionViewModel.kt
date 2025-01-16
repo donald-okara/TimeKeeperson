@@ -46,7 +46,11 @@ class TimerSessionViewModel @Inject constructor(
         viewModelScope.launch {
             _timer.collect { fetchedTimer ->
                 if (sessionState.value.timerId != fetchedTimer?.id) {
-                    fetchedTimer?.let { sessionRepository.createSession(it) }
+                    fetchedTimer?.let { sessionRepository.createSession(
+                        timerId = it.id,
+                        timerName = it.name,
+                        timeLeft = it.totalDuration.toLong()
+                    ) }
                 }
             }
         }
@@ -76,6 +80,12 @@ class TimerSessionViewModel @Inject constructor(
         sessionRepository.cancel()
     }
 
-
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.launch {
+            // Reset session state when ViewModel is cleared (activity/fragment destroyed)
+            sessionRepository.resetSessionStateOnDestroy()
+        }
+    }
 
 }

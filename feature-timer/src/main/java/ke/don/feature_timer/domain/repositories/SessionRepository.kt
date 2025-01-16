@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.StateFlow
 interface SessionRepository {
     val sessionState: StateFlow<SessionState>
 
-    val initialSessionState: StateFlow<SessionState?>
-
     suspend fun createSession(
-        timer : Timer
+        timerId: Int,
+        timerName: String,
+        timeLeft: Long
     )
 
     suspend fun startSession()
@@ -24,4 +24,6 @@ interface SessionRepository {
     suspend fun saveSession()
 
     suspend fun cancel()
+
+    suspend fun resetSessionStateOnDestroy()
 }

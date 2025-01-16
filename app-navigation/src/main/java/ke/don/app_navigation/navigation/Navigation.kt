@@ -23,17 +23,12 @@ fun Navigation(
     ) {
         composable(Screens.Home.route){
             HomeScreen(
-                onTimerClicked = { timerId ->
-                    navController.navigate(
-                        Screens.TimerDetails.route.replace(
-                            oldValue = "{timerId}",
-                            newValue = timerId.toString()
-                        )
-                    )
-                },
                 onAddTimer = {
                     navController.navigate(Screens.AddTimer.route)
-                }
+                },
+                runningColor = MaterialTheme.colorScheme.tertiaryContainer,
+                pausedColor = MaterialTheme.colorScheme.primary,
+                completedColor = MaterialTheme.colorScheme.errorContainer
             )
         }
 

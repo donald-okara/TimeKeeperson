@@ -1,5 +1,6 @@
 package ke.don.app_home.domain.states
 
+import ke.don.datasource.domain.SessionState
 import ke.don.datasource.domain.model.Timer
 import ke.don.datasource.domain.utils.reformatDateTime
 import ke.don.datasource.domain.utils.reformatDuration
@@ -7,6 +8,7 @@ import ke.don.datasource.domain.utils.reformatDuration
 
 data class HomeUiState(
     val timerIsEmpty: Boolean = true,
+    val sessionState: SessionState = SessionState(),
     val allTimers: List<TimerUiState> = emptyList()
 )
 
@@ -14,8 +16,10 @@ data class TimerUiState(
     val id: Int = 0,
     val dateCreatedOrLastEdited: String = "",
     val name: String = "",
-    val totalDuration: String = "",
-    val type: String = ""
+    val totalDuration: Int = 0,
+    val totalDurationReformated: String = "",
+    val type: String = "",
+    val selected: Boolean = false
 )
 
 fun Timer.toTimerUiState(timer: Timer): TimerUiState {
@@ -35,8 +39,9 @@ fun Timer.toTimerUiState(timer: Timer): TimerUiState {
         id = timer.id,
         dateCreatedOrLastEdited = supportingDateText,
         name = displayText,
-        totalDuration = formattedTime,
-        type = timer.type.name
+        totalDurationReformated = formattedTime,
+        type = timer.type.name,
+        totalDuration = timer.totalDuration
     )
 
 }

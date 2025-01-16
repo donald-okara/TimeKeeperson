@@ -145,12 +145,13 @@ fun TimerDetailsScreen(
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier.padding(8.dp)
     ) {
         Text(
             text = timerName,
             style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = modifier.padding(8.dp)
         )
 
         Spacer(modifier = modifier.weight(spacerWeight))
